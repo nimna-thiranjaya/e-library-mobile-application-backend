@@ -47,7 +47,7 @@ const CreateUser = async (req, res) => {
     session.startTransaction();
 
     //construct image name
-    const imageName = `picture_${auth._id}_${Date.now()}`;
+    const imageName = `ProfilePicture_${auth._id}_${Date.now()}`;
     picture = commonUtils.generateFirebaseStorageURL(imageName);
 
     //set user picture

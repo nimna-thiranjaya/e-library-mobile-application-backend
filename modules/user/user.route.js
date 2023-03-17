@@ -1,5 +1,5 @@
 const express = require("express");
-const UserController = require("./user.controller");
+const userController = require("./user.controller");
 const commonMiddleware = require("../common/common.middleware");
 const authMiddleware = require("../auth/auth.middleware");
 
@@ -10,7 +10,7 @@ const UserRouter = express.Router();
 UserRouter.post(
   "/register",
   commonMiddleware.multerUploader.single("picture"),
-  UserController.CreateUser
+  userController.CreateUser
 );
 
 UserRouter.get(
@@ -19,7 +19,7 @@ UserRouter.get(
     constants.USER.ROLES.USER,
     constants.USER.ROLES.ADMIN,
   ]),
-  UserController.GetUserProfile
+  userController.GetUserProfile
 );
 
 UserRouter.delete(
@@ -28,7 +28,7 @@ UserRouter.delete(
     constants.USER.ROLES.USER,
     constants.USER.ROLES.ADMIN,
   ]),
-  UserController.DeleteUserProfile
+  userController.DeleteUserProfile
 );
 
 module.exports = UserRouter;
