@@ -13,4 +13,6 @@ BookRouter.post(
   bookController.CreateBook
 );
 
+BookRouter.get("/getAllBooks", bookController.GetAllBooks);
+
 module.exports = BookRouter;

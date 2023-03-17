@@ -62,6 +62,11 @@ const CreateUser = async (req, res) => {
 
     //commit transaction
     await session.commitTransaction();
+
+    return res.status(StatusCodes.CREATED).json({
+      message: "User created successfully",
+      user: createdUser,
+    });
   } catch (err) {
     //abort transaction
     await session.abortTransaction();
@@ -70,11 +75,6 @@ const CreateUser = async (req, res) => {
     //end session
     session.endSession();
   }
-
-  return res.status(StatusCodes.CREATED).json({
-    message: "User created successfully",
-    user: createdUser,
-  });
 };
 
 //get user profile

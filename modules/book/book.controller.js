@@ -85,6 +85,19 @@ const CreateBook = async (req, res) => {
   }
 };
 
+//get all books
+const GetAllBooks = async (req, res) => {
+  //get all books
+  const books = await BookService.findAll();
+
+  //send response
+  res.status(StatusCodes.OK).json({
+    message: "Books fetched successfully",
+    books,
+  });
+};
+
 module.exports = {
   CreateBook,
+  GetAllBooks,
 };
