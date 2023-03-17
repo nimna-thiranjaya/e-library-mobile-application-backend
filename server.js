@@ -15,10 +15,12 @@ app.use(cors());
 app.use(express.json());
 
 //import routes
-
+const AuthRouter = require("./modules/auth/auth.route");
+const UserRouter = require("./modules/user/user.route");
 
 //define routes
-
+app.use(constants.API.PREFIX.concat("/auth"), AuthRouter);
+app.use(constants.API.PREFIX.concat("/user"), UserRouter);
 
 //error handler middleware
 app.use(errorHandlerMiddleware);
