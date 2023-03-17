@@ -21,4 +21,14 @@ BookRouter.delete(
   bookController.DeleteBook
 );
 
+BookRouter.get("/getBook/:id", bookController.GetBook);
+
+//set multer to upload image and pdf file
+BookRouter.patch(
+  "/updateBook/:id",
+  authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
+  commonMiddleware.multerUploader.array("files", 2),
+  bookController.UpdateBook
+);
+
 module.exports = BookRouter;
