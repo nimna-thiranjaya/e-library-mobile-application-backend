@@ -15,4 +15,10 @@ BookRouter.post(
 
 BookRouter.get("/getAllBooks", bookController.GetAllBooks);
 
+BookRouter.delete(
+  "/deleteBook/:id",
+  authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
+  bookController.DeleteBook
+);
+
 module.exports = BookRouter;

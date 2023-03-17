@@ -97,7 +97,28 @@ const GetAllBooks = async (req, res) => {
   });
 };
 
+//delete book
+const DeleteBook = async (req, res) => {
+  const id = req.params.id;
+
+  //get and validate book
+  const book = await BookService.findById(id);
+
+  if (!book) {
+    throw new NotFoundError("Book not found");
+  }
+
+  //delete book
+  await BookService.findByIdAndDelete(id);
+
+  //send response
+  res.status(StatusCodes.OK).json({
+    message: "Book deleted successfully",
+  });
+};
+
 module.exports = {
   CreateBook,
   GetAllBooks,
+  DeleteBook,
 };
