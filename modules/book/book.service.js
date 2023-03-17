@@ -1,8 +1,9 @@
 const Book = require("./book.model");
 
 /**
- * @param {Book} book
- * @param {import("mongoose").ClientSession} session
+ *
+ * @param {*} book
+ * @param {*} session
  * @returns {Promise<Book>}
  */
 const save = async (book, session) => {
@@ -18,7 +19,8 @@ const findAll = async (queryObj) => {
 };
 
 /**
- * @param {string} id
+ *
+ * @param {*} id
  * @returns {Promise<Book>}
  */
 const findById = async (id) => {
@@ -26,8 +28,8 @@ const findById = async (id) => {
 };
 
 /**
- * @param {string} id
- * @param {import("mongoose").ClientSession} session
+ * @param {*} id
+ * @param {*} session
  * @returns {Promise<Book>}
  */
 const findByIdAndDelete = async (id, session) => {
