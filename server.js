@@ -19,11 +19,13 @@ const AuthRouter = require("./modules/auth/auth.route");
 const UserRouter = require("./modules/user/user.route");
 const BookRouter = require("./modules/book/book.route");
 const FeedbackRouter = require("./modules/feedback/feedback.router");
+const BlogRouter = require("./modules/blog/blog.route");
 
 //define routes
 app.use(constants.API.PREFIX.concat("/auth"), AuthRouter);
 app.use(constants.API.PREFIX.concat("/user"), UserRouter);
 app.use(constants.API.PREFIX.concat("/book"), BookRouter);
+app.use(constants.API.PREFIX.concat("/blog"), BlogRouter);
 app.use(constants.API.PREFIX.concat("/feedback"), FeedbackRouter);
 
 //error handler middleware
