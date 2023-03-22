@@ -44,7 +44,8 @@ const LoginUser = async (req, res) => {
     .status(StatusCodes.OK)
     .setHeader("authorization", `Bearer ${token}`)
     .json({
-      message: "Login successful",
+      message: "Login Successful",
+      role: dbPopulatedUser.user.role,
       token: token,
     });
 };
