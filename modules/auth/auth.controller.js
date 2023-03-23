@@ -10,8 +10,6 @@ const NotFoundError = require("../error/error.classes/NotFoundError");
 const LoginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(req.body);
-
   //email and password validation
   if (!email || !password) {
     throw new BadRequestError("Email and password are required!");
@@ -44,7 +42,8 @@ const LoginUser = async (req, res) => {
     .status(StatusCodes.OK)
     .setHeader("authorization", `Bearer ${token}`)
     .json({
-      message: "Login successful",
+      message: "Login Successful",
+      role: dbPopulatedUser.user.role,
       token: token,
     });
 };
