@@ -20,6 +20,7 @@ const UserRouter = require("./modules/user/user.route");
 const BookRouter = require("./modules/book/book.route");
 const FeedbackRouter = require("./modules/feedback/feedback.router");
 const AdvertisementRouter = require("./modules/advertisement/advertisement.route");
+const BlogRouter = require("./modules/blog/blog.route");
 
 //define routes
 app.use(constants.API.PREFIX.concat("/auth"), AuthRouter);

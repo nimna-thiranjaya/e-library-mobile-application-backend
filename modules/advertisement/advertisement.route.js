@@ -1,5 +1,5 @@
 const express = require("express");
-const advertisementController = require("./Advertisement.controller");
+const advertisementController = require("./advertisement.controller");
 const commonMiddleware = require("../common/common.middleware");
 const authMiddleware = require("../auth/auth.middleware");
 const constants = require("../../constants");
@@ -12,14 +12,20 @@ AdvertisementRouter.post(
   advertisementController.CreateAdvertisement
 );
 
-AdvertisementRouter.get("/getAllAdvertisements", advertisementController.GetAllAdvertisements);
+AdvertisementRouter.get(
+  "/getAllAdvertisements",
+  advertisementController.GetAllAdvertisements
+);
 
 AdvertisementRouter.delete(
   "/deleteAdvertisement/:id",
   advertisementController.DeleteAdvertisement
 );
 
-AdvertisementRouter.get("/getAdvertisement/:id", advertisementController.GetAdvertisement);
+AdvertisementRouter.get(
+  "/getAdvertisement/:id",
+  advertisementController.GetAdvertisement
+);
 
 //set multer to upload image and pdf file
 AdvertisementRouter.patch(
