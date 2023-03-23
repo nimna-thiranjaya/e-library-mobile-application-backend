@@ -33,8 +33,7 @@ const authorize = (roleArr) => {
       // role validation
       if (
         !roleArr.includes(payload.role) &&
-        payload.role !== constants.USER.ROLES.ADMIN &&
-        payload.role !== constants.USER.ROLES.USER
+        payload.role !== constants.USER.ROLES.ADMIN
       )
         return next(
           new ForbiddenError(`You're unauthorized to access this resource!!`)
