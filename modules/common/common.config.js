@@ -5,7 +5,7 @@ const DatabaseConnection = async () => {
   let mongoUrl = null;
   let databaseStatus = null;
 
-  switch ("production") {
+  switch (process.env.NODE_ENV) {
     case "production":
       mongoUrl = process.env.MONGODB_URI_PROD;
       databaseStatus = "PRODUCTION";
