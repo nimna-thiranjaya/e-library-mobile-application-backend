@@ -14,7 +14,9 @@ const save = async (blog, session) => {
  * @returns {Promise<Blog[]>}
  */
 const findAll = async (queryObj) => {
-  return await Blog.find(queryObj).populate("blogAuthor");
+  return await Blog.find(queryObj)
+    .populate("similarBooks")
+    .populate("blogAuthor");
 };
 
 /**
@@ -27,7 +29,8 @@ const findAllSorted = async (queryObj) => {
   return await Blog.find(queryObj)
     .sort({ createdAt: -1 })
     .limit(3)
-    .populate("blogAuthor");
+    .populate("blogAuthor")
+    .populate("similarBooks");
 };
 //Get total number of blogs
 const blogCount = async (queryObj) => {
