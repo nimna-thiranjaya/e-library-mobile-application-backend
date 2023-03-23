@@ -29,7 +29,19 @@ const findAllSorted = async (queryObj) => {
     .limit(3)
     .populate("blogAuthor");
 };
+//Get total number of blogs
+const blogCount = async (queryObj) => {
+  return await Blog.find(queryObj).countDocuments();
+};
 
+//Today's blogs count
+const todayBlogCount = async (queryObj) => {
+  return await Blog.find(queryObj)
+    .countDocuments()
+    .where("publishedOn")
+    .gte(new Date().setHours(0, 0, 0, 0))
+    .lte(new Date().setHours(23, 59, 59, 999)); // today
+};
 /**
  * @param {*} id
  * @returns {Promise<Blog>}
@@ -57,4 +69,6 @@ module.exports = {
   findById,
   findByIdAndDelete,
   findAllSorted,
+  todayBlogCount,
+  blogCount,
 };

@@ -130,6 +130,26 @@ const DeleteBlog = async (req, res) => {
   });
 };
 
+//Get total number of blogs
+const GetTotalBlogs = async (req, res) => {
+  const totalBlogs = await BlogService.blogCount();
+
+  res.status(StatusCodes.OK).json({
+    message: "Total blogs fetched successfully",
+    totalBlogs: totalBlogs,
+  });
+};
+
+//Get today's blogs
+const GetTodaysBlogs = async (req, res) => {
+  const todaysBlogs = await BlogService.todayBlogCount();
+
+  res.status(StatusCodes.OK).json({
+    message: "Today's blogs fetched successfully",
+    todaysBlogs: todaysBlogs,
+  });
+};
+
 module.exports = {
   CreateBlog,
   GetAllBlogs,
@@ -137,4 +157,6 @@ module.exports = {
   UpdateBlog,
   DeleteBlog,
   GetAllRecentBlogs,
+  GetTotalBlogs,
+  GetTodaysBlogs,
 };
