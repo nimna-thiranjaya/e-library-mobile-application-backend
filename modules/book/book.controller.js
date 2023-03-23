@@ -3,9 +3,7 @@ const { startSession } = require("mongoose");
 const commonUtils = require("../common/common.util");
 const commonService = require("../common/common.service");
 const Book = require("./book.model");
-const Auth = require("../auth/auth.model");
 const BookService = require("./book.service");
-const AuthService = require("../auth/auth.service");
 
 // Error messages
 const BadRequestError = require("../error/error.classes/BadRequestError");
@@ -87,13 +85,27 @@ const CreateBook = async (req, res) => {
 
 //get all books
 const GetAllBooks = async (req, res) => {
+  const category = req.query.category;
+
   //get all books
   const books = await BookService.findAll();
+
+  let filteredBooks = books;
+  //filter books by category
+  if (category) {
+    filteredBooks = books.filter((book) =>
+      book.bookCategories
+        .map((element) => {
+          return element.toLowerCase();
+        })
+        .includes(category.toLowerCase())
+    );
+  }
 
   //send response
   res.status(StatusCodes.OK).json({
     message: "Books fetched successfully",
-    books,
+    filteredBooks,
   });
 };
 
@@ -214,6 +226,7 @@ const UpdateBook = async (req, res) => {
     session.endSession();
   }
 };
+
 module.exports = {
   CreateBook,
   GetAllBooks,
