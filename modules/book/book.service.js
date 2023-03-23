@@ -15,7 +15,7 @@ const save = async (book, session) => {
  * @returns {Promise<Book[]>}
  */
 const findAll = async (queryObj) => {
-  return await Book.find(queryObj);
+  return await Book.find(queryObj).sort({ createdAt: -1 });
 };
 
 /**

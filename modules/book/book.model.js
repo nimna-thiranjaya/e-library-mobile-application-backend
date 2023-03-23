@@ -10,8 +10,8 @@ const BookSchema = new mongoose.Schema(
 
     bookAuthor: {
       type: String,
-      required: [true, "Book auther is required!"],
-      maxlength: [70, "Book auther should not exceed 70 characters!"],
+      required: [true, "Book Author is required!"],
+      maxlength: [70, "Book Author should not exceed 70 characters!"],
     },
 
     bookBanner: {
@@ -19,10 +19,21 @@ const BookSchema = new mongoose.Schema(
       required: [true, "Book banner is required!"],
     },
 
+    bookCategories: {
+      type: [String],
+      required: [true, "Book categories are required!"],
+      validate: {
+        validator: (value) => {
+          return value.length > 0;
+        },
+        message: "Book category is required!",
+      },
+    },
+
     bookDescription: {
       type: String,
       required: [true, "Book description is required!"],
-      maxlength: [800, "Book description should not exceed 800 characters!"],
+      maxlength: [1000, "Book description should not exceed 1000 characters!"],
     },
 
     eBook: {

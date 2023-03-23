@@ -3,16 +3,10 @@ const constants = require("../../constants");
 
 const UserSchema = new mongoose.Schema(
   {
-    firstName: {
+    fullName: {
       type: String,
-      maxlength: [50, "First name should not exceed 50 characters!"],
-      required: [true, "First name is required!"],
-    },
-
-    lastName: {
-      type: String,
-      maxlength: [50, "Last name should not exceed 50 characters!"],
-      required: [true, "Last name is required!"],
+      maxlength: [100, "Full Name should not exceed 100 characters!"],
+      required: [true, "Full Name is required!"],
     },
 
     email: {
@@ -32,6 +26,7 @@ const UserSchema = new mongoose.Schema(
 
     picture: {
       type: String,
+      required: [true, "User picture is required!"],
     },
 
     role: {
