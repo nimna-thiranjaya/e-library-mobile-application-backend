@@ -1,4 +1,4 @@
-const Blog = require("../models/blog.model");
+const Blog = require("./blog.model");
 
 /**
  * @param {Object} blog
@@ -14,11 +14,24 @@ const save = async (blog, session) => {
  * @returns {Promise<Blog[]>}
  */
 const findAll = async (queryObj) => {
-  return await Blog.find(queryObj).sort({ createdAt: -1 });
+  return await Blog.find(queryObj).populate("blogAuthor");
 };
 
 /**
- * @param {Object} id
+ * @param {Object} queryObj
+ * @returns {Promise<Blog[]>}
+ */
+
+//Get only first 3 blogs
+const findAllSorted = async (queryObj) => {
+  return await Blog.find(queryObj)
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .populate("blogAuthor");
+};
+
+/**
+ * @param {*} id
  * @returns {Promise<Blog>}
  */
 const findById = async (id) => {
@@ -43,4 +56,5 @@ module.exports = {
   findAll,
   findById,
   findByIdAndDelete,
+  findAllSorted,
 };

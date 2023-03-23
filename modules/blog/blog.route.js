@@ -9,11 +9,13 @@ const BlogRouter = express.Router();
 BlogRouter.post(
   "/createBlog",
   authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
-  commonMiddleware.multerUploader.array("files", 2),
+  commonMiddleware.multerUploader.single("blogBanner"),
   blogController.CreateBlog
 );
 
 BlogRouter.get("/getAllBlogs", blogController.GetAllBlogs);
+
+BlogRouter.get("/getRecentBlogs", blogController.GetAllRecentBlogs);
 
 BlogRouter.delete(
   "/deleteBlog/:id",
@@ -21,13 +23,13 @@ BlogRouter.delete(
   blogController.DeleteBlog
 );
 
-BlogRouter.get("/getBlog/:id", blogController.GetBlog);
+BlogRouter.get("/getBlog/:id", blogController.GetBlogById);
 
 //set multer to upload image and pdf file
 BlogRouter.patch(
   "/updateBlog/:id",
   authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
-  commonMiddleware.multerUploader.array("files", 2),
+  commonMiddleware.multerUploader.single("blogBanner"),
   blogController.UpdateBlog
 );
 

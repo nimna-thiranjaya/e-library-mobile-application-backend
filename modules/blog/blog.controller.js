@@ -13,80 +13,45 @@ const NotFoundError = require("../error/error.classes/NotFoundError");
 //create Blog
 const CreateBlog = async (req, res) => {
   const blog = new Blog(req.body);
-
+  console.log(req.file);
   //get all files and validate as a image file and pdf file
-  const files = req.files;
-  let blogImg = null;
-  let pdfFile = null;
-
-  for (const file of files) {
-    if (file.mimetype.split("/")[0] == "image") {
-      blogImg = file;
-    }
-
-    if (file.mimetype.split("/")[0] == "application") {
-      pdfFile = file;
-    }
+  if (!req.file) {
+    throw new BadRequestError("Please upload an image");
   }
 
-  if (!blogImg) {
-    throw new BadRequestError("Please upload a blog image");
+  if (req.file.mimetype.split("/")[0] !== "image") {
+    throw new BadRequestError("Only images are permitted!");
   }
 
-  if (!pdfFile) {
-    throw new BadRequestError("Please upload a pdf file");
-  }
+  const auth = req.auth;
 
-  let createBlog = null;
-
-  //start mongoose default session to handle transactions
-  const session = await startSession();
   try {
-    //start transaction
-    session.startTransaction();
+    //Construct blog object
+    blog.blogAuthor = auth.id;
 
     //construct image name
-    const imageName = `BlogBanner_${blog._id}_${Date.now()}`;
-    const banner = commonUtils.generateFirebaseStorageURL(imageName);
-
-    //construct pdf name
-    const pdfName = `BlogPdf_${blog._id}_${Date.now()}`;
-    const pdf = commonUtils.generateFirebaseStorageURL(pdfName);
-
-    //set blog banner and pdf
-    blog.blogBanner = banner;
-    blog.eblog = pdf;
+    const imageName = `BlogImage_${blog._id}_${Date.now()}`;
+    blog.blogImage = commonUtils.generateFirebaseStorageURL(imageName);
 
     //save blog
-    createBlog = await BlogService.save(blog, session);
+    const createdBlog = await BlogService.save(blog);
 
     //upload image to firebase storage
-    await commonService.uploadToFirebase(blogImg, banner);
-
-    //upload pdf to firebase storage
-    await commonService.uploadToFirebase(pdfFile, pdf);
-
-    //commit transaction
-    await session.commitTransaction();
+    await commonService.uploadToFirebase(req.file, imageName);
 
     //send response
     res.status(StatusCodes.CREATED).json({
-      message: "Blog created successfully",
-      blog: createBlog,
+      message: "Blog Published successfully",
+      blog: createdBlog,
     });
-  } catch (err) {
-    //abort transaction
-    await session.abortTransaction();
-    throw err;
-  } finally {
-    //end session
-    session.endSession();
+  } catch (error) {
+    throw error;
   }
 };
 
 //get all blogs
 const GetAllBlogs = async (req, res) => {
-  const blogs = await BlogService.getAll();
+  const blogs = await BlogService.findAll();
 
   res.status(StatusCodes.OK).json({
     message: "Blogs fetched successfully",
@@ -94,123 +59,75 @@ const GetAllBlogs = async (req, res) => {
   });
 };
 
+//get all recent blogs
+const GetAllRecentBlogs = async (req, res) => {
+  const blogs = await BlogService.findAllSorted();
+
+  res.status(StatusCodes.OK).json({
+    message: "Blogs fetched successfully",
+    blogs: blogs,
+  });
+};
+
+//Update Blog
+const UpdateBlog = async (req, res) => {
+  const blogId = req.params.id;
+  const blog = await BlogService.findById(blogId);
+
+  blog.set(req.body);
+
+  //get all files and validate as a image file and pdf file
+  if (req.file) {
+    if (req.file.mimetype.split("/")[0] !== "image") {
+      throw new BadRequestError("Only images are permitted!");
+    }
+
+    //construct image name
+    const imageName = `BlogImage_${blog._id}_${Date.now()}`;
+    blog.blogImage = commonUtils.generateFirebaseStorageURL(imageName);
+
+    //upload image to firebase storage
+    await commonService.uploadToFirebase(req.file, imageName);
+  }
+  //save blog
+  const updatedBlog = await BlogService.save(blog);
+
+  //send response
+  res.status(StatusCodes.OK).json({
+    message: "Blog updated successfully",
+    blog: updatedBlog,
+  });
+};
+
 //get blog by id
 const GetBlogById = async (req, res) => {
   const blogId = req.params.id;
-  const blog = await BlogService.getById(blogId);
+  const blog = await BlogService.findById(blogId);
 
   if (!blog) {
     throw new NotFoundError("Blog not found");
   }
-  //send response
+
   res.status(StatusCodes.OK).json({
     message: "Blog fetched successfully",
     blog: blog,
   });
 };
 
-//update blog
-const UpdateBlog = async (req, res) => {
-  const blogId = req.params.id;
-  const blog = await BlogService.getById(blogId);
-
-  if (!blog) {
-    throw new NotFoundError("Blog not found");
-  }
-
-  //get all files and validate as a image file and pdf file
-  const files = req.files;
-  let blogImg = null;
-  let pdfFile = null;
-
-  for (const file of files) {
-    if (file.mimetype.split("/")[0] == "image") {
-      blogImg = file;
-    }
-
-    if (file.mimetype.split("/")[0] == "application") {
-      pdfFile = file;
-    }
-  }
-
-  //start mongoose default session to handle transactions
-  const session = await startSession();
-  try {
-    //start transaction
-    session.startTransaction();
-
-    //construct image name
-    const imageName = `BlogBanner_${blog._id}_${Date.now()}`;
-    const banner = commonUtils.generateFirebaseStorageURL(imageName);
-
-    //construct pdf name
-    const pdfName = `BlogPdf_${blog._id}_${Date.now()}`;
-    const pdf = commonUtils.generateFirebaseStorageURL(pdfName);
-
-    //set blog banner and pdf
-    blog.blogBanner = banner;
-    blog.eblog = pdf;
-
-    //save blog
-    createBlog = await BlogService.save(blog, session);
-
-    //upload image to firebase storage
-    await commonService.uploadToFirebase(blogImg, banner);
-
-    //upload pdf to firebase storage
-    await commonService.uploadToFirebase(pdfFile, pdf);
-
-    //commit transaction
-    await session.commitTransaction();
-
-    //send response
-    res.status(StatusCodes.CREATED).json({
-      message: "Blog created successfully",
-      blog: createBlog,
-    });
-  } catch (err) {
-    //abort transaction
-    await session.abortTransaction();
-    throw err;
-  } finally {
-    //end session
-    session.endSession();
-  }
-};
-
 //delete blog
 const DeleteBlog = async (req, res) => {
   const blogId = req.params.id;
-  const blog = await BlogService.getById(blogId);
+
+  const blog = await BlogService.findById(blogId);
 
   if (!blog) {
     throw new NotFoundError("Blog not found");
   }
+  await BlogService.findByIdAndDelete(blogId);
 
-  //start mongoose default session to handle transactions
-  const session = await startSession();
-  try {
-    //start transaction
-    session.startTransaction();
-
-    //delete blog
-    await BlogService.delete(blog, session);
-
-    //commit transaction
-    await session.commitTransaction();
-
-    //send response
-    res.status(StatusCodes.OK).json({
-      message: "Blog deleted successfully",
-    });
-  } catch (err) {
-    //abort transaction
-    await session.abortTransaction();
-    throw err;
-  } finally {
-    //end session
-    session.endSession();
-  }
+  res.status(StatusCodes.OK).json({
+    message: "Blog deleted successfully",
+  });
 };
 
 module.exports = {
@@ -219,4 +136,5 @@ module.exports = {
   GetBlogById,
   UpdateBlog,
   DeleteBlog,
+  GetAllRecentBlogs,
 };

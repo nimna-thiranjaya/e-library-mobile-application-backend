@@ -16,14 +16,12 @@ const blogSchema = new mongoose.Schema(
       required: [true, "Content is required!"],
     },
     blogAuthor: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: [true, "Author is required!"],
     },
-    blogAuthorImage: {
-      type: String,
-      required: [true, "Author image is required!"],
-    },
-    references: {
+
+    blogReference: {
       type: String,
     },
     blogCategory: {
@@ -31,10 +29,19 @@ const blogSchema = new mongoose.Schema(
       required: [true, "Category is required!"],
     },
     similarBooks: {
-      type: Array,
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Book",
+        },
+      ],
     },
     videoLink: {
       type: String,
+    },
+    publishedOn: {
+      type: Date,
+      default: Date.now,
     },
   },
   {
