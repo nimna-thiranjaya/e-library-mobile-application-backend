@@ -17,6 +17,10 @@ BlogRouter.get("/getAllBlogs", blogController.GetAllBlogs);
 
 BlogRouter.get("/getRecentBlogs", blogController.GetAllRecentBlogs);
 
+BlogRouter.get("/getTotalBlogs", blogController.GetTotalBlogs);
+
+BlogRouter.get("/getTodaysBlogs", blogController.GetTodaysBlogs);
+
 BlogRouter.delete(
   "/deleteBlog/:id",
   authMiddleware.authorize([constants.USER.ROLES.ADMIN]),

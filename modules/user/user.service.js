@@ -19,8 +19,15 @@ const findByIdAndDelete = async (id, session) => {
     return await User.findByIdAndDelete(id);
   }
 };
+
+//Get all user count not including admin
+const userCount = async (obj) => {
+  return await User.find(obj).countDocuments();
+};
+
 module.exports = {
   save,
   findById,
   findByIdAndDelete,
+  userCount,
 };
