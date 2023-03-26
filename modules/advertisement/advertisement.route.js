@@ -1,5 +1,5 @@
 const express = require("express");
-const advertisementController = require("./Advertisement.controller");
+const advertisementController = require("./advertisement.controller");
 const commonMiddleware = require("../common/common.middleware");
 const authMiddleware = require("../auth/auth.middleware");
 const constants = require("../../constants");
