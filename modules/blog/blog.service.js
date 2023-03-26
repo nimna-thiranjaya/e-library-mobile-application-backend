@@ -14,7 +14,9 @@ const save = async (blog, session) => {
  * @returns {Promise<Blog[]>}
  */
 const findAll = async (queryObj) => {
-  return await Blog.find(queryObj).populate("blogAuthor");
+  return await Blog.find(queryObj)
+    .populate("similarBooks")
+    .populate("blogAuthor");
 };
 
 /**
@@ -27,9 +29,22 @@ const findAllSorted = async (queryObj) => {
   return await Blog.find(queryObj)
     .sort({ createdAt: -1 })
     .limit(3)
-    .populate("blogAuthor");
+    .populate("blogAuthor")
+    .populate("similarBooks");
+};
+//Get total number of blogs
+const blogCount = async (queryObj) => {
+  return await Blog.find(queryObj).countDocuments();
 };
 
+//Today's blogs count
+const todayBlogCount = async (queryObj) => {
+  return await Blog.find(queryObj)
+    .countDocuments()
+    .where("publishedOn")
+    .gte(new Date().setHours(0, 0, 0, 0))
+    .lte(new Date().setHours(23, 59, 59, 999)); // today
+};
 /**
  * @param {*} id
  * @returns {Promise<Blog>}
@@ -57,4 +72,6 @@ module.exports = {
   findById,
   findByIdAndDelete,
   findAllSorted,
+  todayBlogCount,
+  blogCount,
 };

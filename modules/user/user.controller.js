@@ -135,4 +135,28 @@ const DeleteUserProfile = async (req, res) => {
   });
 };
 
-module.exports = { CreateUser, GetUserProfile, DeleteUserProfile };
+//Get all user count not including admin
+const userCount = async (req, res) => {
+  const userCount = await UserService.userCount({ role: "user" });
+
+  return res.status(StatusCodes.OK).json({
+    userCount,
+  });
+};
+
+//Get all admin count
+const adminCount = async (req, res) => {
+  const adminCount = await UserService.userCount({ role: "admin" });
+
+  return res.status(StatusCodes.OK).json({
+    adminCount,
+  });
+};
+
+module.exports = {
+  CreateUser,
+  GetUserProfile,
+  DeleteUserProfile,
+  userCount,
+  adminCount,
+};

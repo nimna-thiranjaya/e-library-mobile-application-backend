@@ -31,4 +31,16 @@ UserRouter.delete(
   userController.DeleteUserProfile
 );
 
+UserRouter.get(
+  "/getTotalUsers",
+  authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
+  userController.userCount
+);
+
+UserRouter.get(
+  "/getTotalAdmins",
+  authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
+  userController.adminCount
+);
+
 module.exports = UserRouter;
